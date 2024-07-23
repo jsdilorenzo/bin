@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+if ! command -v yt-dlp &> /dev/null
+then
+    echo "yt-dlp could not be found. Please install it: pip install yt-dlp"
+    exit 1
+fi
+
+if [[ -n $1 ]]; then 
+  yt-dlp \
+      -o '$HOME/Videos/YouTube/%(uploader)s/%(title)s - %(id)s.%(ext)s' \
+      --download-archive archive.txt $1
+else
+  echo "Usage: ,ytdlp [video/channel/playlist URL]"
+fi

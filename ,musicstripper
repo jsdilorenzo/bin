@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Directory to search
+if [[ $1 ]]; then
+ DIR_TO_SEARCH="$1"
+else
+  DIR_TO_SEARCH="$(pwd)"
+fi
+
+EXTS_IN_DIR=$(find $DIR_TO_SEARCH -type f | grep -Eo '\.[^./]*$' | sort -u)
+AUDIO_EXTS=('flac' 'm4a' 'wav' 'aiff' 'mp3' 'aac' 'ogg' 'wma' 'opus' 'dsf' 'dff' 'ape')
+for audio_ext in ${AUDIO_EXTS[@]}; do
+  case $audio_ext in
+    1) echo "found $audio_ext file!" 
+    ;;
+    *) echo "oooo too bad"
+    ;;
+  esac
+done
+
+# Loop through each extension and find files
+# for EXT in "${EXTENSIONS[@]}"; do
+#     find "$DIR_TO_SEARCH" -type f -not -name "*.$EXT"
+# done

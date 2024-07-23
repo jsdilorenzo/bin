@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ $1 -eq "-u" ]]; then
+  fd -u -t f | rg -o '\.[^./]*$' | sort -u
+else
+  fd -t f | rg -o '\.[^./]*$' | sort -u
+fi

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Query Wikipedia by issuing a DNS query for a TXT record. 
+# The TXT record will also include a short URL to the 
+# complete corresponding Wikipedia entry.
+# Taken from commandlinefu.com
+
+dig +short txt ${1}.wp.dg.cx

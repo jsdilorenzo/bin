@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# 
+# Uses ripgrep to generate a Python-like dictionary
+# where key=searchTerm and value=count
+
+searchTerm="$1"
+countLimit="$2"
+
+# Perform the ripgrep search and process output
+rg --count "$searchTerm" . | sort -k2 -nr -t : | awk -F/ '{print $NF}' | head -n $countLimit | while IFS=: read -r file count; do
+   echo "\"$file\": $count"
+done

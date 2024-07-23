@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser as ap
+from bs4 import BeautifulSoup as bs
+from urllib.parse import urlparse
+import requests
+
+
+def get_tags(page, html_tag, innertext_only=False):
+    if is_url(page):
+        page = requests.get(page).text
+        soup = bs(page, 'lxml')
+    else:
+        try:
+            with open(page, 'r') as html_file:
+                soup = bs(html_file, 'lxml')
+        except Exception:
+            print(f"'{page}' is not a valid file, exiting...")
+            exit(1)
+
+    tags = soup.find_all(html_tag)
+    if tags:
+        if innertext_only:
+            print(f"Fetching inner contents of <{html_tag}> tags...")
+            tags = [t.text for t in tags]
+        with open("soup.txt", "w") as outfile:
+            outfile.writelines([line.text+"\n" for line in tags])
+    else:
+        print(f'No <{html_tag}> tags found.')
+        exit(1)
+
+
+def is_url(url):
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except AttributeError:
+        return False
+
+
+def main():
+    parser = ap(
+        description='''
+        Boilerplate template for common BeautifulSoup HTML parsing tasks
+        '''
+    )
+    # make this a positional arg, rather than having to use the -f flag
+    parser.add_argument("file", type=str, help="HTML file (local or web URL)")
+    parser.add_argument(
+        "tag", type=str, help="HTML tag to return all instances of")
+    parser.add_argument("-i", action="store_true",
+                        help="Only show inner content of given tag")
+    parser.add_argument("-I", action="store_true",
+                        help='''
+                        Only show tags themselves, without inner content
+                        ''')
+
+    args = parser.parse_args()
+
+    if args.i:
+        tags = get_tags(args.file, args.tag, args.i)
+        print(tags)
+    else:
+        tags = get_tags(args.file, args.tag)
+        print(tags)
+
+
+if __name__ == "__main__":
+    main()
